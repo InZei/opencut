@@ -1,0 +1,10 @@
+# OpenCut 依赖
+
+# 核心依赖
+playwright>=1.40.0
+opencv-python>=4.9.0
+moviepy>=1.0.3
+numpy>=1.24.0
+
+# 开发依赖（可选）
+pytest>=7.0.0

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 1080px;
+            flex-direction: column;
+            background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%);
+        }
+        .title {
+            font-size: 100px;
+            color: white;
+            text-shadow: 3px 3px 15px rgba(0, 0, 0, 0.8);
+            font-weight: bold;
+            margin-bottom: 50px;
+        }
+        .visualizer-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            height: 200px;
+        }
+        .bar {
+            width: 30px;
+            background: linear-gradient(to top, #f472b6, #60a5fa);
+            border-radius: 15px;
+            transition: height 0.1s ease;
+        }
+        .beat-indicator {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fbbf24, #f59e0b);
+            opacity: 0.3;
+            transition: transform 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Audio Demo</div>
+        <div class="visualizer-container">
+            <div class="beat-indicator" id="beat"></div>
+            <div class="bar" id="bar1" style="height: 50px;"></div>
+            <div class="bar" id="bar2" style="height: 80px;"></div>
+            <div class="bar" id="bar3" style="height: 120px;"></div>
+            <div class="bar" id="bar4" style="height: 100px;"></div>
+            <div class="bar" id="bar5" style="height: 70px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // 音频可视化动画
+        window.renderFrame = function(frame) {
+            // 模拟音频节拍（每 30 帧一个节拍）
+            const beat = Math.sin(frame * 0.2) * 0.5 + 0.5;
+            
+            // 节拍指示器
+            const beatEl = document.getElementById('beat');
+            const scale = 1 + beat * 0.5;
+            beatEl.style.transform = `scale(${scale})`;
+            beatEl.style.opacity = 0.3 + beat * 0.7;
+            
+            // 音频柱状图（使用不同频率的正弦波模拟）
+            const bars = [
+                document.getElementById('bar1'),
+                document.getElementById('bar2'),
+                document.getElementById('bar3'),
+                document.getElementById('bar4'),
+                document.getElementById('bar5')
+            ];
+            
+            const heights = [50, 80, 120, 100, 70];
+            
+            bars.forEach((bar, i) => {
+                // 每个柱子有不同的相位和振幅
+                const phase = i * 0.5;
+                const amplitude = 30 + i * 10;
+                const height = heights[i] + Math.sin(frame * 0.3 + phase) * amplitude * beat;
+                bar.style.height = `${Math.max(30, height)}px`;
+            });
+        }
+    </script>
+</body>
+</html>

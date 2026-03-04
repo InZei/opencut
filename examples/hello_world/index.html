@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 1080px;
+            flex-direction: column;
+        }
+        .title {
+            font-size: 100px;
+            color: white;
+            text-shadow: 3px 3px 15px rgba(0, 0, 0, 0.8);
+            font-weight: bold;
+            opacity: 0;
+        }
+        .subtitle {
+            font-size: 40px;
+            color: #60a5fa;
+            margin-top: 30px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+            opacity: 0;
+        }
+        .gradient-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: -1;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-bg"></div>
+    <div class="container">
+        <div class="title" id="title">Hello Opencut!</div>
+        <div class="subtitle" id="subtitle">Python 版 Remotion</div>
+    </div>
+
+    <script>
+        // Opencut 帧渲染钩子
+        window.renderFrame = function(frame) {
+            const title = document.getElementById('title');
+            const subtitle = document.getElementById('subtitle');
+            
+            // 标题：前 30 帧淡入并上移
+            if (frame < 30) {
+                const opacity = frame / 30;
+                const yOffset = 100 * (1 - opacity);
+                title.style.opacity = opacity;
+                title.style.transform = `translateY(${yOffset}px)`;
+            } else {
+                title.style.opacity = 1;
+                title.style.transform = 'translateY(0)';
+            }
+            
+            // 副标题：从第 20 帧开始淡入
+            if (frame >= 20) {
+                const subOpacity = Math.min(1, (frame - 20) / 30);
+                subtitle.style.opacity = subOpacity;
+                subtitle.style.transform = `translateY(${50 * (1 - subOpacity)}px)`;
+            } else {
+                subtitle.style.opacity = 0;
+            }
+        }
+    </script>
+</body>
+</html>
