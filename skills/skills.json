@@ -1,0 +1,93 @@
+{
+  "skills": [
+    {
+      "name": "create-video",
+      "path": "create-video/SKILL.md",
+      "description": "How to create programmatic videos using OpenCut with HTML/CSS/JS animations",
+      "triggers": [
+        "create video",
+        "make video",
+        "video creation",
+        "animation",
+        "HTML video",
+        "CSS animation",
+        "Remotion",
+        "programmatic video",
+        "data visualization video",
+        "AI-generated video",
+        "marketing video",
+        "social media video"
+      ],
+      "compatibility": {
+        "python": "3.12+",
+        "playwright": "chromium"
+      }
+    },
+    {
+      "name": "use-extensions",
+      "path": "use-extensions/SKILL.md",
+      "description": "How to use OpenCut extension packages for advanced video features",
+      "triggers": [
+        "transition",
+        "fade",
+        "slide",
+        "zoom",
+        "font",
+        "Google Font",
+        "Three.js",
+        "3D",
+        "SVG",
+        "Tailwind",
+        "subtitle",
+        "caption",
+        "SRT",
+        "VTT",
+        "extension",
+        "CrossFade",
+        "GoogleFont",
+        "ThreeClip",
+        "SvgClip",
+        "SubtitleClip"
+      ],
+      "compatibility": {
+        "python": "3.12+",
+        "opencut": "0.2.0+"
+      }
+    },
+    {
+      "name": "debug-rendering",
+      "path": "debug-rendering/SKILL.md",
+      "description": "How to debug and troubleshoot OpenCut video rendering issues",
+      "triggers": [
+        "debug",
+        "error",
+        "issue",
+        "problem",
+        "not working",
+        "black screen",
+        "audio not playing",
+        "video not showing",
+        "slow rendering",
+        "performance",
+        "Playwright",
+        "MoviePy",
+        "codec",
+        "export error",
+        "rendering failed",
+        "troubleshoot"
+      ],
+      "compatibility": {
+        "python": "3.12+",
+        "playwright": "chromium",
+        "moviepy": "2.x"
+      }
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "opencut_version": "0.2.0",
+    "created": "2026-03-08",
+    "total_skills": 3,
+    "language": "en"
+  }
+}
