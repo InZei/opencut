@@ -1,5 +1,6 @@
 """HTML 渲染器 - 使用 Playwright 渲染 HTML 帧"""
 
+import os
 import asyncio
 from typing import List, Tuple, Optional
 from playwright.async_api import async_playwright
@@ -17,8 +18,19 @@ class HTMLRenderer:
         page: Playwright Page 实例
     """
     
-    def __init__(self, url: str, width: int, height: int) -> None:
-        self.url = url
+    def __init__(self, html_path: str, width: int, height: int) -> None:
+        """
+        初始化 HTML 渲染器。
+        
+        Args:
+            html_path (str): HTML 文件绝对路径
+            width (int): 画布宽度
+            height (int): 画布高度
+        """
+        if not os.path.exists(html_path):
+            raise FileNotFoundError(f"HTML 文件不存在：{html_path}")
+        
+        self.html_path = html_path
         self.width = width
         self.height = height
         self.browser = None
@@ -42,8 +54,10 @@ class HTMLRenderer:
             viewport={"width": self.width, "height": self.height}
         )
         
-        await self.page.goto(self.url)
-        print(f"HTML 渲染器已初始化：{self.url}")
+        # 使用 file:// 协议直接加载本地 HTML 文件
+        file_url = f"file:///{self.html_path.replace('\\', '/')}"
+        await self.page.goto(file_url)
+        print(f"HTML 渲染器已初始化：{file_url}")
     
     async def get_frame(self, frame_index: int) -> Tuple[bytes, List[dict]]:
         """

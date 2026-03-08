@@ -79,7 +79,15 @@ class Exporter:
             for audio_clip in audio_clips:
                 try:
                     clip = AudioFileClip(audio_clip.src)
-                    clip = clip.volumex(audio_clip.volume)
+                    
+                    # MoviePy 2.x API: with_volume_scale, 1.x API: volumex
+                    # 优先尝试 2.x API
+                    if hasattr(clip, 'with_volume_scale'):
+                        clip = clip.with_volume_scale(audio_clip.volume)
+                    elif hasattr(clip, 'volumex'):
+                        # 向后兼容 1.x
+                        clip = clip.volumex(audio_clip.volume)
+                    
                     audio_file_clips.append(clip)
                 except Exception as e:
                     print(f"警告：加载音频失败 {audio_clip.src}: {e}")
@@ -87,7 +95,13 @@ class Exporter:
             if audio_file_clips:
                 # 合并所有音频轨道
                 final_audio = CompositeAudioClip(audio_file_clips)
-                video_clip = video_clip.set_audio(final_audio)
+                
+                # MoviePy 2.x API: with_audio, 1.x API: set_audio
+                if hasattr(video_clip, 'with_audio'):
+                    video_clip = video_clip.with_audio(final_audio)
+                elif hasattr(video_clip, 'set_audio'):
+                    # 向后兼容 1.x
+                    video_clip = video_clip.set_audio(final_audio)
         
         # 5. 确保输出目录存在
         output_dir = os.path.dirname(output_path)

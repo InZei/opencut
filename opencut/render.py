@@ -6,7 +6,6 @@ import tempfile
 import asyncio
 from typing import Optional
 from .core import Composition, Sequence, HTMLClip, VideoClip, AudioClip
-from .server import start_server, stop_server
 from .renderer import HTMLRenderer, CVCompositor, Exporter
 
 
@@ -22,12 +21,11 @@ def render(composition: Composition, output: str) -> str:
         str: 输出文件路径
         
     渲染流程：
-    1. 启动本地 HTTP 服务器
-    2. 初始化 Playwright 渲染器
-    3. 逐帧渲染（HTML → PNG）
-    4. 使用 MoviePy 合成音频
-    5. 导出最终视频
-    6. 清理临时文件
+    1. 初始化 Playwright 渲染器（直接加载本地 HTML 文件）
+    2. 逐帧渲染（HTML → PNG）
+    3. 使用 MoviePy 合成音频
+    4. 导出最终视频
+    5. 清理临时文件
     """
     print("=" * 60)
     print("OpenCut 渲染引擎 v0.1.0")
@@ -42,25 +40,23 @@ def render(composition: Composition, output: str) -> str:
     print(f"输出文件：{output}")
     print(f"视频规格：{composition.width}x{composition.height} @ {composition.fps}fps, {composition.duration_in_frames}帧")
     
-    # 2. 查找 HTML 文件所在目录并启动 HTTP 服务器
+    # 2. 查找 HTML 文件路径
     html_clip = None
-    html_dir = None
+    html_path = None
     
     for seq in composition.sequences:
         if isinstance(seq.component, HTMLClip):
             html_clip = seq.component
-            html_dir = os.path.dirname(os.path.abspath(html_clip.src))
+            html_path = os.path.abspath(html_clip.src)
             break
     
     if not html_clip:
         raise ValueError("未找到 HTMLClip，至少需要一个 HTML 组件")
     
-    if not os.path.exists(html_clip.src):
+    if not os.path.exists(html_path):
         raise FileNotFoundError(f"HTML 文件不存在：{html_clip.src}")
     
-    # 启动 HTTP 服务器
-    base_url = start_server(html_dir, port=8000)
-    html_url = f"{base_url}/{os.path.basename(html_clip.src)}"
+    print(f"HTML 文件：{html_path}")
     
     # 3. 收集音频轨道
     audio_clips = []
@@ -69,7 +65,7 @@ def render(composition: Composition, output: str) -> str:
             audio_clips.append(seq.component)
     
     # 4. 初始化渲染器
-    renderer = HTMLRenderer(html_url, composition.width, composition.height)
+    renderer = HTMLRenderer(html_path, composition.width, composition.height)
     compositor = CVCompositor()
     
     # 5. 异步渲染循环
@@ -117,8 +113,6 @@ def render(composition: Composition, output: str) -> str:
         raise
     finally:
         # 8. 清理资源
-        stop_server()
-        
         # 清理临时目录
         if os.path.exists(temp_dir):
             shutil.rmtree(temp_dir)
